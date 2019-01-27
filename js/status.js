@@ -16,36 +16,42 @@
           console.log('No Second flight...here we go');
           var flightRef = db.collection("flights").doc(doc.data().flight1);
           flightRef.get().then(function(flightDoc) {
-            console.log("Here is the flight data =>", flightDoc.data());
-            $('#fName').append('Flight Name:' + flightDoc.data().name + '');
-            $('#depName').append('Departure:' + flightDoc.data().depart + '');
-            $('#desName').append('Destination:' + flightDoc.data().arrival + '');
-            if (flightDoc.data().landed) {
-              console.log("Landed Flight data:", flightDoc.data());
-              if (flightDoc.data().connectPassDone == false && doc.data().connecting == false) {
-                console.log("Youre gonna wait");
-                $('#good').hide();
-                $('#wait').show();
-              } else if (flightDoc.data().connectPassDone == true && doc.data().connecting == true) {
-                console.log("You're good to go!");
-                $('#wait').hide();
-                $('#good').show();
-              } else if (flightDoc.data().connectPassDone == true && doc.data().connecting == false) {
-                console.log("You're good to go!");
-                $('#wait').hide();
-                $('#good').show();
-              } else if (flightDoc.data().connectPassDone == false && doc.data().connecting == true) {
-                console.log("You're good to go!");
-                $('#wait').hide();
-                $('#good').show();
-              }
-            }else{
-              console.log('Flight hasnt landed');
-              $('#notLanded').show();
+            if(flightDoc.data().status = 2){
+              console.log('UH-oh we got an issue');
+              $('#delayed').show();
+            }else {
+              console.log("Here is the flight data =>", flightDoc.data());
               $('#fName').append('Flight Name:' + flightDoc.data().name + '');
               $('#depName').append('Departure:' + flightDoc.data().depart + '');
               $('#desName').append('Destination:' + flightDoc.data().arrival + '');
+              if (flightDoc.data().landed) {
+                console.log("Landed Flight data:", flightDoc.data());
+                if (flightDoc.data().connectPassDone == false && doc.data().connecting == false) {
+                  console.log("Youre gonna wait");
+                  $('#good').hide();
+                  $('#wait').show();
+                } else if (flightDoc.data().connectPassDone == true && doc.data().connecting == true) {
+                  console.log("You're good to go!");
+                  $('#wait').hide();
+                  $('#good').show();
+                } else if (flightDoc.data().connectPassDone == true && doc.data().connecting == false) {
+                  console.log("You're good to go!");
+                  $('#wait').hide();
+                  $('#good').show();
+                } else if (flightDoc.data().connectPassDone == false && doc.data().connecting == true) {
+                  console.log("You're good to go!");
+                  $('#wait').hide();
+                  $('#good').show();
+                }
+              }else{
+                console.log('Flight hasnt landed');
+                $('#notLanded').show();
+                $('#fName').append('Flight Name:' + flightDoc.data().name + '');
+                $('#depName').append('Departure:' + flightDoc.data().depart + '');
+                $('#desName').append('Destination:' + flightDoc.data().arrival + '');
+              }
             }
+          
           }).catch(function(error) {
             console.log("Error getting document:", error);
           });
@@ -112,5 +118,7 @@
       }).catch(function(error) {
         console.log("Error getting document:", error);
       });
+    }else{
+      console.log('No one is signed in!!!');
     }
   });
