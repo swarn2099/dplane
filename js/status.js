@@ -12,14 +12,18 @@
       $('#signoutButton').show();
       var docRef = db.collection("users").doc(user.email);
       docRef.get().then(function(doc) {
+
         if (!doc.data().connecting) {
           console.log('No Second flight...here we go');
           var flightRef = db.collection("flights").doc(doc.data().flight1);
           flightRef.get().then(function(flightDoc) {
+            $('#welcomeTo').append("Welcome to " + flightDoc.data().arrival);
+
             if(flightDoc.data().status = 2){
               console.log('UH-oh we got an issue');
               $('#delayed').show();
             }else {
+              $('#welcomeTo').append("Welcome to " + flightDoc.data().arrival);
               console.log("Here is the flight data =>", flightDoc.data());
               $('#fName').append('Flight Name:' + flightDoc.data().name + '');
               $('#depName').append('Departure:' + flightDoc.data().depart + '');
@@ -51,7 +55,7 @@
                 $('#desName').append('Destination:' + flightDoc.data().arrival + '');
               }
             }
-          
+
           }).catch(function(error) {
             console.log("Error getting document:", error);
           });
@@ -75,6 +79,7 @@
             }else{
               console.log("flight is fine...youre good to go");
               var flightRef = db.collection("flights").doc(doc.data().flight1);
+              $('#welcomeTo').append("Welcome to " + flightDoc.data().arrival);
               flightRef.get().then(function(flightDoc) {
                 console.log("Here is the flight data =>", flightDoc.data());
                 $('#fName').append('Flight Name:' + flightDoc.data().name + '');
