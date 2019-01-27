@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+  <!--Import materialize.css-->
+  <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+  <link type="text/css" rel="stylesheet" href="css/home.css" media="screen,projection" />
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="collegium">
+  <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+  <script type="text/javascript" src="js/init.js"></script>
+  <script type="text/javascript" src="js/subscriptions.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+  <script src="https://www.gstatic.com/firebasejs/5.7.3/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase-auth.js"></script>
+
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyBlomPQlng48hV9PTDExEsQl5vGoZX-gi4",
+      authDomain: "dplane-d36aa.firebaseapp.com",
+      databaseURL: "https://dplane-d36aa.firebaseio.com",
+      projectId: "dplane-d36aa",
+      storageBucket: "dplane-d36aa.appspot.com",
+      messagingSenderId: "1038433461472"
+    };
+    firebase.initializeApp(config);
+    const settings = {
+      timestampsInSnapshots: true
+    };
+    firebase.firestore().settings(settings);
+    var db = firebase.firestore();
+  </script>
+  <script type="text/javascript" src="js/status.js"></script>
+
+</head>
+
+<ul id="slide-out" class="sidenav sidenav-fixed center"><br>
+  <li><a href="index.html" class="tooltipped" data-position="right" data-tooltip="Go Home"><i class="material-icons small">home</i></a></li>
+  <li><a class="modal-trigger" id="loginButton" href="#login"><i class="material-icons small">lock_open</i></a></li>
+  <li><a id="signoutButton" onclick="signout()"><i class="material-icons small">lock_close</i></a></li>
+</ul>
+<div class="navbar-fixed">
+  <nav>
+    <div class="nav-wrapper black-text" style="background-color: #2E4BB1;">
+      <a href="index.html" class="brand-logo left" style="padding-left: 20%;"><span class="white-text" style="font-weight: 900;">Project</span><span style="font-weight: 900; color: #F9B612;"> D-Plane</span></a>
+      <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons white-text">menu</i></a>
+
+    </div>
+  </nav>
+</div>
+
+<body>
+  <section class="center">
+    <div class="row">
+      <div class="col s12 m5" id="good">
+        <div class="card-panel z-depth-5" style="border-radius: 20px; background-color: #3453C4; height: 300px;">
+          <h5 class="white-text left-align" style="font-weight: 900;">You're good to go.</h5>
+          <h5 class="left-align white-text" style="font-weight: 900;"><br>We'll see you on the next flight :)</h5>
+          <h5 class="left-align white-text" style="font-weight: 900;"><br>Thanks for flying Southwest.</h5>
+
+        </div>
+      </div>
+      <div class="col s12 m5" id="wait">
+        <div class="card-panel z-depth-5" style="border-radius: 20px; background-color: #F9B612; height: 350px;">
+          <h4 class="white-text left-align" style="font-weight: 900;">Almost done. </h4>
+          <h6 class="left-align white-text" style="font-weight: 900;"><br>You'll be next after the passengers with connecting flights get off.</h6>
+          <h6 class="left-align white-text" style="font-weight: 900;"><br>Thanks for flying Southwest.</h6>
+        </div>
+      </div>
+      <div class="col s12 m5" id="delayed">
+        <div class="card-panel z-depth-5" style="border-radius: 20px; background-color: #E51D23; ">
+          <h4 class="white-text left-align" style="fonst-weight: 900;">Uh-oh<br><br> You're connecting flight has been delayed. </h4>
+          <h6 class="left-align white-text" style="font-weight: 900;"><br>Please pick an alternative flight.</h6>
+        </div>
+      </div>
+      <div class="col s12 m5" id="notLanded">
+        <div class="card-panel z-depth-5" style="border-radius: 20px; background-color: #2E4BB1;">
+          <h5 class="white-text left-align" style="font-weight: 900;">Looks like you're still moving.<br></h5>
+          <h6 class="white-text left-align" style="font-weight: 900;">We'll send you the signal when you can get off.<br></h6>
+
+        </div>
+      </div>
+      <div id="altFlights">
+        <!--  Alternative Flights append here-->
+      </div>
+      <div class="col s12 m5">
+        <div class="card-panel z-depth-5 black" style="border-radius: 20px; height: 350px;">
+          <h5 class="white-text left-align" style="font-weight: 900;">Flight Information</h5>
+          <hr color="white" />
+          <br>
+          <h6 class="white-text left-align" id="fName"></h6>
+          <h6 class="white-text left-align" id="depName"></h6>
+          <h6 class="white-text left-align" id="desName"></h6>
+        </div>
+      </div>
+    </div>
+    </div>
+    <section class="container">
+
+    </section>
+  </section>
+</body>
+<div class="card animated flipInY modal white" id="login" style="max-width: 500px;">
+  <div class="card-content">
+    <form id="loginSection">
+      <h5 class="center" style="font-weight: 900;">Login to <span class="black-text">Project DPlane</span></h5>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="emailLogin" type="email" class="validate">
+          <label for="emailLogin">Email</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="passwordLogin" type="password" class="validate">
+          <label for="passwordLogin">Password</label>
+        </div>
+      </div>
+      <div class="row center">
+        <div class="input-field col s12">
+          <a class="waves-effect waves-light btn color-page3" style="border-radius: 20px;" onclick="login()"><i class="material-icons left">pool</i>Login</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="js/materialize.min.js"></script>
+<script>
+  ! function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (!d.getElementById(id)) {
+      js = d.createElement(s);
+      js.id = id;
+      js.src = 'https://weatherwidget.io/js/widget.min.js';
+      fjs.parentNode.insertBefore(js, fjs);
+    }
+  }(document, 'script', 'weatherwidget-io-js');
+</script>
+
+</html>
